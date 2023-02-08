@@ -4,14 +4,14 @@
 Game *game = nullptr;
 
 int main( int argc, char *argv[] ){
-    const int FPS=60;
+    const int FPS=500;
     const int frameDelay = 1000/FPS;
 
     Uint32 frameStart;
     int frameTime;
     game = new Game();
 
-    game->init("DELAAAA!!!!!", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 640, SDL_WINDOW_SHOWN);
+    game->init("DELAAAA!!!!!", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1000, 800, SDL_WINDOW_SHOWN);
 
     while (game->running()){
         frameStart=SDL_GetTicks();

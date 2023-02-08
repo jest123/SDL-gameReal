@@ -5,11 +5,11 @@ GameObject::GameObject(const char* textureSheet,  int x, int y){
     objTexture=TextureManager::LoadTexture(textureSheet);
     destRect.x=x;
     destRect.y=y;
-
+    
 }
-void GameObject::Update(int x,int y){
-    srcRect.h= 32;
-    srcRect.w=32;
+void GameObject::Update(int x,int y,int size){
+    srcRect.h= size;
+    srcRect.w=size;
     srcRect.x=0;
     srcRect.y=0;
     if(x!=NULL)
@@ -21,4 +21,7 @@ void GameObject::Update(int x,int y){
 }
 void GameObject::Render(){
     SDL_RenderCopy(Game::renderer, objTexture, &srcRect, &destRect);
+}
+void GameObject::checkTileCollisions(int map[][25], int tileSize){
+    
 }

@@ -3,13 +3,15 @@
 #include "TextureManager.hpp"
 #include "GameObject.hpp"
 #include "Map.hpp"
+#include <iostream>
+#include <stdlib.h>
 
 GameObject* player;
 Map* map;
 SDL_Texture* playerTex;
 SDL_Rect srcR, destR;
 SDL_Renderer* Game::renderer=nullptr;
-int count,playerx, playery;
+int count,playerx=0, playery=0, windowY,windowX, zoom=32;
 Game::Game(){
 
 }
@@ -40,10 +42,12 @@ void Game::init(const char *title, int x, int y, int width, int height, Uint32 f
             SDL_SetRenderDrawColor(renderer, 255, 255, 0, 255);
             cout<<"Renderer ustvarjen"<<endl;
         }
-        player=new GameObject("assets/player.png",400,400);
+        player=new GameObject("assets/player.png",(width/2)-48,(height/2)-48);
         map= new Map();
         destR.w=64;
         destR.h=64;
+        windowY=height;
+        windowX=width;
         isRunning = true;
     }
 }
@@ -51,34 +55,20 @@ void Game::init(const char *title, int x, int y, int width, int height, Uint32 f
 void Game::handleEvents(){
     SDL_Event event;
     const Uint8* keyboard = SDL_GetKeyboardState(NULL);
-    if(keyboard[SDL_SCANCODE_W]){
+    if(keyboard[SDL_SCANCODE_W]&&playery!=(-windowY/2)+32){
         playery -= 1;}
-    if(keyboard[SDL_SCANCODE_A])
+    if(keyboard[SDL_SCANCODE_A]&&playerx!=(-windowX/2)+32)
         playerx -= 1;
-    if(keyboard[SDL_SCANCODE_S])
+    if(keyboard[SDL_SCANCODE_S]&&playery!=(((sizeof(map->map)/sizeof(map->map[0]))*zoom)-windowY/2)-16)
         playery += 1;
-    if(keyboard[SDL_SCANCODE_D])
+    if(keyboard[SDL_SCANCODE_D]&&playerx!=((sizeof(map->map[0])/sizeof(map->map[0][0])*zoom)-windowX/2)-16)
         playerx += 1;
+    if(keyboard[SDL_SCANCODE_KP_PLUS])
+        zoom++;
+    if(keyboard[SDL_SCANCODE_KP_MINUS])
+        zoom--;
     SDL_PollEvent(&event);
     switch (event.type){
-        /*case SDL_KEYDOWN:
-        switch( event.key.keysym.sym ){
-                    case SDLK_LEFT:
-                        playerx -= 1;
-                        break;
-                    case SDLK_RIGHT:
-                        playerx += 1;
-                        break;
-                    case SDLK_UP:
-                        playery -= 1;
-                        break;
-                    case SDLK_DOWN:
-                        playery += 1;
-                        break;
-                    default:
-                        break;
-                }
-            break;*/
         case SDL_QUIT:
             isRunning = false;
             break;
@@ -88,13 +78,13 @@ void Game::handleEvents(){
 }
 
 void Game::update(){
-    player->Update(0,0);
+    player->Update(0,0,zoom);
 }
 
 void Game::render(){
     SDL_RenderClear(renderer);
     SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-    map->DrawMap(-playerx,-playery,64);
+    map->DrawMap(-playerx,-playery,zoom);
     player->Render();
     SDL_RenderPresent(renderer);
 }
