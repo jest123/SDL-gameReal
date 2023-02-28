@@ -1,5 +1,6 @@
 #pragma once
 #include "game.hpp"
+using namespace std;
 class GameObject{
     public:
         GameObject(const char* texturesheet, int x, int y,int type);
@@ -7,7 +8,7 @@ class GameObject{
 
         void Update(int,int,int,int xoffset, int yoffset);
         void Render();
-        void checkCollisions(GameObject*);
+        void checkCollisions(GameObject *arrays[][20], GameObject *self,bool *moveRight,bool *moveLeft, bool *moveUp, bool *moveDown);
     private:
         int  xpos;
         int  ypos;

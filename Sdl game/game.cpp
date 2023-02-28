@@ -13,8 +13,9 @@ SDL_Texture* playerTex;
 SDL_Rect srcR, destR;
 SDL_Renderer* Game::renderer=nullptr;
 int count,playerx=0, playery=0, windowY,windowX, zoom=64;
-GameObject* arene[10];
+GameObject* arrayi[3][20];
 GameObject* tmpGameObject;
+bool moveUp=1,moveDown=1,moveRight=1,moveLeft=1;
 Game::Game(){
 
 }
@@ -47,8 +48,12 @@ void Game::init(const char *title, int x, int y, int width, int height, Uint32 f
         }
         player=new GameObject("assets/player.png",(width/2)-48,(height/2)-48,0);
         tmpGameObject= new GameObject("assets/arena.png",0,0,0);
-        arene[0]=new GameObject("assets/arena.png",40,60,4);
-        arene[1]=new GameObject("assets/arena.png",150,160,4);
+        arrayi[0][0]=new GameObject("assets/arena.png",40,60,4);
+        arrayi[0][1]=new GameObject("assets/arena.png",150,160,4);
+        arrayi[0][2]=NULL;
+        arrayi[1][0]=NULL;
+        arrayi[2][0]=NULL;
+
         map= new Map();
         destR.w=64;
         destR.h=64;
@@ -61,13 +66,13 @@ void Game::init(const char *title, int x, int y, int width, int height, Uint32 f
 void Game::handleEvents(){
     SDL_Event event;
     const Uint8* keyboard = SDL_GetKeyboardState(NULL);
-    if(keyboard[SDL_SCANCODE_W]&&playery!=(-windowY/2)+32){
+    if(keyboard[SDL_SCANCODE_W]&&playery!=((-windowY/2)+32)&&moveUp){
         playery -= 1;}
-    if(keyboard[SDL_SCANCODE_A]&&playerx!=(-windowX/2)+32)
+    if(keyboard[SDL_SCANCODE_A]&&playerx!=((-windowX/2)+32)&&moveLeft)
         playerx -= 1;
-    if(keyboard[SDL_SCANCODE_S]&&playery!=(((sizeof(map->map)/sizeof(map->map[0]))*zoom)-windowY/2)-16)
+    if(keyboard[SDL_SCANCODE_S]&&playery!=(((sizeof(map->map)/(sizeof(map->map[0]))*zoom)-windowY/2)-16)&&moveDown)
         playery += 1;
-    if(keyboard[SDL_SCANCODE_D]&&playerx!=((sizeof(map->map[0])/sizeof(map->map[0][0])*zoom)-windowX/2)-16)
+    if(keyboard[SDL_SCANCODE_D]&&playerx!=(((sizeof(map->map[0])/sizeof(map->map[0][0])*zoom)-windowX/2)-16)&&moveRight)
         playerx += 1;
     if(keyboard[SDL_SCANCODE_KP_PLUS])
         zoom++;
@@ -86,22 +91,24 @@ void Game::handleEvents(){
 void Game::update(){
     player->Update(0,0,zoom,0,0);
     tmpGameObject->Update(1,1,zoom,-playerx,-playery);
-    arene[0]->Update(300,1,zoom,-playerx,-playery);
-    arene[1]->Update(1,400,zoom,-playerx,-playery);
+    for(int i=0;i<20;i++)
+    arrayi[0][0]->Update(300,1,zoom,-playerx,-playery);
+    arrayi[0][1]->Update(1,400,zoom,-playerx,-playery);
+    player->checkCollisions(arrayi,player,&moveRight,&moveLeft,&moveUp,&moveDown);
 }
 
 void Game::render(){
     SDL_RenderClear(renderer);
     SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
     map->DrawMap(-playerx,-playery,zoom);
-    cout<<"Rendering player: ";
+    //cout<<"Rendering player: ";
     player->Render();
-    cout<<"Rendering tmp: ";
+    //cout<<"Rendering tmp: ";
     tmpGameObject->Render();
-    arene[0]->Render();
-    cout<<"arena 0 ustvarjena"<<endl;
-    arene[1]->Render();
-    cout<<"arena 1 ustvarjena"<<endl;
+    arrayi[0][0]->Render();
+    //cout<<"arena 0 ustvarjena"<<endl;
+    arrayi[0][1]->Render();
+    //cout<<"arena 1 ustvarjena"<<endl;
     SDL_RenderPresent(renderer);
 }
 
