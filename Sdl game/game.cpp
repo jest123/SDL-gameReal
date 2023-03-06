@@ -47,7 +47,7 @@ void Game::init(const char *title, int x, int y, int width, int height, Uint32 f
             cout<<"Renderer ustvarjen"<<endl;
         }
         player=new GameObject("assets/player.png",(width/2)-48,(height/2)-48,0);
-        tmpGameObject= new GameObject("assets/arena.png",0,0,0);
+        //tmpGameObject= new GameObject("assets/arena.png",0,0,0);
         arrayi[0][0]=new GameObject("assets/arena.png",40,60,4);
         arrayi[0][1]=new GameObject("assets/arena.png",150,160,4);
         arrayi[0][2]=NULL;
@@ -90,7 +90,7 @@ void Game::handleEvents(){
 
 void Game::update(){
     player->Update(0,0,zoom,0,0);
-    tmpGameObject->Update(1,1,zoom,-playerx,-playery);
+    //tmpGameObject->Update(1,1,zoom,-playerx,-playery);
     for(int i=0;i<20;i++)
     arrayi[0][0]->Update(300,1,zoom,-playerx,-playery);
     arrayi[0][1]->Update(1,400,zoom,-playerx,-playery);
@@ -104,7 +104,7 @@ void Game::render(){
     //cout<<"Rendering player: ";
     player->Render();
     //cout<<"Rendering tmp: ";
-    tmpGameObject->Render();
+    //tmpGameObject->Render();
     arrayi[0][0]->Render();
     //cout<<"arena 0 ustvarjena"<<endl;
     arrayi[0][1]->Render();
