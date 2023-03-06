@@ -6,7 +6,7 @@
 #include <iostream>
 #include <stdlib.h>
 #include<list> 
-
+//ROK :)
 GameObject* player;
 Map* map;
 SDL_Texture* playerTex;
